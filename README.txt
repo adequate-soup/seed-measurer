@@ -17,3 +17,6 @@ NUB_8_7_2016_3_X_7_6_2016_4     NUB          2016    222           0.1982	    0.
 NUB_8_7_2016_3_X_7_6_2016_4     NUB          2016    222           0.1968	    0.6812	    0.3600
 NUB_8_7_2016_3_X_7_6_2016_4     NUB          2016    222           0.1911	    0.6520	    0.3575
 NUB_8_7_2016_3_X_7_6_2016_4     NUB          2016    222           0.1907	    0.6730	    0.3582
+
+This scripts is dependent on the following python libraries:
+scipy, imutils, time, math, numpy, argparse, threading, csv, opencv, os

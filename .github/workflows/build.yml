@@ -1,0 +1,71 @@
+name: Build executables
+permissions:
+  contents: write
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Build with PyInstaller (Linux / macOS)
+        if: runner.os != 'Windows'
+        run: |
+          pyinstaller \
+            --onefile \
+            --name seed_measure_v1.7.0 \
+            seed_measure_v1.7.0.py
+
+      - name: Build with PyInstaller (Windows)
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: |
+          pyinstaller ^
+            --onefile ^
+            --name seed_measure_v1.7.0 ^
+            seed_measure_v1.7.0.py
+
+      - name: Rename executable (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          mv dist/seed_measure_v1.7.0 dist/seed_measure_v1.7.0-linux
+
+      - name: Rename executable (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          mv dist/seed_measure_v1.7.0 dist/seed_measure_v1.7.0-macos
+
+      - name: Rename executable (Windows)
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: |
+          rename dist\seed_measure_v1.7.0 seed_measure_v1.7.0-windows.exe
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: dist/seed_measure_v1.7.0-*
+          fail_on_unmatched_files: true
+          append_release_assets: true

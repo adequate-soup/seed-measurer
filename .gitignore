@@ -1,6 +1,6 @@
 ORCC_population_details.csv
-in
-out
-python_scripts
-r_scripts/
-versions
+in/*
+out/*
+python_scripts/*
+r_scripts/*
+versions/*

@@ -1,4 +1,3 @@
-pyinstaller
 imutils
 numpy
 opencv-python

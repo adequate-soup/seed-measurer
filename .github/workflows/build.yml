@@ -47,13 +47,14 @@ jobs:
             --nofollow-import-to=cv2.cuda \
             --nofollow-import-to=cv2.utils \
             --output-filename=seed_measure_main.bin \
+            --lto=yes \
             seed_measure_main.py
 
       # Windows build (PowerShell-safe)
       - name: Build with Nuitka (Windows)
         if: runner.os == 'Windows'
         run: |
-          python -m nuitka --onefile --assume-yes-for-downloads --nofollow-import-to=cv2.gapi --nofollow-import-to=cv2.cuda --nofollow-import-to=cv2.utils --output-filename=seed_measure_main seed_measure_main.py
+          python -m nuitka --onefile --assume-yes-for-downloads --nofollow-import-to=cv2.gapi --nofollow-import-to=cv2.cuda --nofollow-import-to=cv2.utils --output-filename=seed_measure_main --lto=yes seed_measure_main.py
 
       - name: Rename executable (Linux)
         if: runner.os == 'Linux'

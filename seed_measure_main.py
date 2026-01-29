@@ -22,7 +22,6 @@ from math import log10, hypot
 import numpy as np
 import argparse
 import threading
-import csv
 import cv2
 import os
 
@@ -304,18 +303,18 @@ class PhotoReader:
 
     def write_csv(self):
         """Writes all measured seed data to a CSV file."""
-        # --- MODIFIED: Simplified CSV output ---
-        with open(os.path.join(self.outDir, (self.line_name + ".csv")), "w", newline="") as csvFile:
-            seedWriter = csv.writer(csvFile)
-            seedWriter.writerow(self.headers)
+        path = os.path.join(self.outDir, self.line_name + ".csv")
 
-            four_decimals = lambda num: format(num, ".4f")
+        four_decimals = "{:.4f}".format
+
+        with open(path, "w", encoding="utf-8") as f:
+            # Write header
+            f.write(",".join(self.headers) + "\n")
 
             for seed_metrics in self.seedMeasurements:
-                # The row now only contains line_name and seed count before the metrics
-                row = [self.line_name, self.seedCount]
-                row.extend(map(four_decimals, seed_metrics))
-                seedWriter.writerow(row)
+                row = [self.line_name, str(self.seedCount)]
+                row.extend(four_decimals(x) for x in seed_metrics)
+                f.write(",".join(row) + "\n")
 
 class PhotoManager:
     def __init__(self, progVersion, dateModified):
@@ -445,7 +444,7 @@ class PhotoManager:
         print(f"Average of {avgTime:.2f} images per second, with {self.errors} error{s}.")
 
 if __name__ == "__main__":
-    version = "1.7.4" # Updated version
+    version = "1.7.10" # Updated version
     dateModified = "January 28, 2026"
 
     try:

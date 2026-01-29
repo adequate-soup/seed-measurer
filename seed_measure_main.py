@@ -433,7 +433,7 @@ class PhotoManager:
         print(f"Average of {avgTime:.2f} images per second, with {self.errors} error{s}.")
 
 if __name__ == "__main__":
-    version = "1.7.1" # Updated version
+    version = "1.7.4" # Updated version
     dateModified = "January 28, 2026"
 
     try:

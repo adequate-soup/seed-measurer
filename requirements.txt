@@ -1,5 +1,4 @@
 pyinstaller
-scipy
 imutils
 numpy
 opencv-python

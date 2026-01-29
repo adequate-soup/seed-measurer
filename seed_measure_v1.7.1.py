@@ -17,10 +17,9 @@
 """
 
 # Import necessary packages
-from scipy.spatial import distance as dist
 from imutils import perspective
 from time import time
-from math import log10
+from math import log10, hypot
 import numpy as np
 import argparse
 import imutils
@@ -179,7 +178,7 @@ class PhotoReader:
         (tlblX, tlblY) = midpoint(tl, bl)
         (trbrX, trbrY) = midpoint(tr, br)
 
-        dB = dist.euclidean((tlblX, tlblY), (trbrX, trbrY))
+        dB = hypot(trbrX - tlblX, trbrY - tlblY)
         self.pxPerMil = dB / self.boxWidth
 
     def _measure_seeds(self):
@@ -204,8 +203,9 @@ class PhotoReader:
             (tlblX, tlblY) = midpoint(tl, bl)
             (trbrX, trbrY) = midpoint(tr, br)
 
-            dA = dist.euclidean((tltrX, tltrY), (blbrX, blbrY))
-            dB = dist.euclidean((tlblX, tlblY), (trbrX, trbrY))
+            dA = hypot(blbrX - tltrX, blbrY - tltrY)
+            dB = hypot(trbrX - tlblX, trbrY - tlblY)
+
 
             area = cv2.contourArea(contour) / self.pxPerMil ** 2
             metrics = [dA / self.pxPerMil, dB / self.pxPerMil]
@@ -433,7 +433,7 @@ class PhotoManager:
         print(f"Average of {avgTime:.2f} images per second, with {self.errors} error{s}.")
 
 if __name__ == "__main__":
-    version = "1.7.0" # Updated version
+    version = "1.7.1" # Updated version
     dateModified = "January 28, 2026"
 
     try:

@@ -1,3 +1,12 @@
+# Ignore files with no extension
+*
+!*/
+!*.* 
+# Except for these
+!README
+!LICENSE
+!Makefile
+
 ORCC_population_details.csv
 in/*
 out/*

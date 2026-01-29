@@ -36,11 +36,12 @@ jobs:
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
 
-      - name: Build with Nuitka
+      # Linux / macOS build (bash)
+      - name: Build with Nuitka (Linux / macOS)
+        if: runner.os != 'Windows'
         run: |
           python -m nuitka \
             --onefile \
-            --standalone \
             --assume-yes-for-downloads \
             --enable-plugin=numpy \
             --nofollow-import-to=cv2.gapi \
@@ -49,21 +50,24 @@ jobs:
             --output-filename=seed_measure_${{ github.ref_name }} \
             seed_measure_${{ github.ref_name }}.py
 
+      # Windows build (PowerShell-safe)
+      - name: Build with Nuitka (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          python -m nuitka --onefile --assume-yes-for-downloads --enable-plugin=numpy --nofollow-import-to=cv2.gapi --nofollow-import-to=cv2.cuda --nofollow-import-to=cv2.utils --output-filename=seed_measure_${{ github.ref_name }} seed_measure_${{ github.ref_name }}.py
+
       - name: Rename executable (Linux)
         if: runner.os == 'Linux'
-        run: |
-          mv seed_measure_${{ github.ref_name }}.bin seed_measure_${{ github.ref_name }}-linux
+        run: mv seed_measure_${{ github.ref_name }}.bin seed_measure_${{ github.ref_name }}-linux
 
       - name: Rename executable (macOS)
         if: runner.os == 'macOS'
-        run: |
-          mv seed_measure_${{ github.ref_name }}.bin seed_measure_${{ github.ref_name }}-macos
+        run: mv seed_measure_${{ github.ref_name }}.bin seed_measure_${{ github.ref_name }}-macos
 
       - name: Rename executable (Windows)
         if: runner.os == 'Windows'
         shell: cmd
-        run: |
-          rename seed_measure_${{ github.ref_name }}.exe seed_measure_${{ github.ref_name }}-windows.exe
+        run: rename seed_measure_${{ github.ref_name }}.exe seed_measure_${{ github.ref_name }}-windows.exe
 
       - name: Upload to GitHub Release
         uses: softprops/action-gh-release@v2

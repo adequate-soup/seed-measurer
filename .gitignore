@@ -4,3 +4,6 @@ out/*
 python_scripts/*
 r_scripts/*
 versions/*
+.DS_Store
+.R*
+._*

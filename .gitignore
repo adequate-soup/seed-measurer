@@ -1,12 +1,4 @@
-# Ignore files with no extension
-*
-!*/
-!*.* 
-# Except for these
-!README
-!LICENSE
-!Makefile
-
+seed_measure_v1.7.0-linux
 ORCC_population_details.csv
 in/*
 out/*

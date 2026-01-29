@@ -60,7 +60,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: cmd
         run: |
-          rename dist\seed_measure_v1.7.0 seed_measure_v1.7.0-windows.exe
+          rename dist\seed_measure_v1.7.0.exe seed_measure_v1.7.0-windows.exe
 
       - name: Upload to GitHub Release
         uses: softprops/action-gh-release@v2

@@ -9,7 +9,7 @@
  benjamis20@berkeley.edu
 
  Blackman Lab @ UC Berkeley
- Last Updated January 28, 2026
+ Last Updated January 29, 2026
 
  Seed Measure takes an image of seeds on a bright background and measures each seed's
  area, length, and width to a CSV file. Your seeds must be pictured inside a box of known
@@ -17,12 +17,10 @@
 """
 
 # Import necessary packages
-from imutils import perspective
 from time import time
 from math import log10, hypot
 import numpy as np
 import argparse
-import imutils
 import threading
 import csv
 import cv2
@@ -31,6 +29,20 @@ import os
 # Finds the midpoint between two sets of (x, y) coordinates
 def midpoint(ptA, ptB):
     return ((ptA[0] + ptB[0]) * 0.5, (ptA[1] + ptB[1]) * 0.5)
+
+def order_points(pts):
+    # pts: (4, 2) array
+    rect = np.zeros((4, 2), dtype="float32")
+
+    s = pts.sum(axis=1)
+    rect[0] = pts[np.argmin(s)]  # top-left
+    rect[2] = pts[np.argmax(s)]  # bottom-right
+
+    diff = np.diff(pts, axis=1)
+    rect[1] = pts[np.argmin(diff)]  # top-right
+    rect[3] = pts[np.argmax(diff)]  # bottom-left
+
+    return rect
 
 # Finds seeds in an individual photo
 class PhotoReader:
@@ -172,7 +184,7 @@ class PhotoReader:
         box = cv2.minAreaRect(self.boxContour)
         box = cv2.boxPoints(box)
         box = np.array(box, dtype="int")
-        box = perspective.order_points(box)
+        box = order_points(box)
 
         (tl, tr, br, bl) = box
         (tlblX, tlblY) = midpoint(tl, bl)
@@ -195,7 +207,7 @@ class PhotoReader:
             box = cv2.minAreaRect(contour)
             box = cv2.boxPoints(box)
             box = np.array(box, dtype="int")
-            box = perspective.order_points(box)
+            box = order_points(box)
             
             (tl, tr, br, bl) = box
             (tltrX, tltrY) = midpoint(tl, tr)

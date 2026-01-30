@@ -1,10 +1,9 @@
-seed_measure_v1.7.0-linux
-ORCC_population_details.csv
+misc/*
 in/*
 out/*
 python_scripts/*
 r_scripts/*
-versions/*
+old_versions/*
 .DS_Store
 .R*
 ._*
